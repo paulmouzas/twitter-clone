@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="left">
+  <h1>Hello, {{request.user.username}}!</h1>
+  <form action="{% url 'signout' %}" method="POST">
+    {% csrf_token %}
+    <input id="link" type="submit" value="signout" />
+  </form>
+  
+  <div id="tweet-form">
+    <p>Tweet your thoughts...</p>
+    <form action="{% url 'index' %}" method="POST">
+      {% csrf_token %}
+      {{tweet_form.as_p}}
+      <input type="submit" value="submit"/>
+    </form>
+  </div>
+  <div id="tweets">
+  {% if tweets %}
+    {% for tweet in tweets %}
+    <p>{{tweet.text}}</p>
+    <p>Tweeted by: {{tweet.user.username}}</p>
+    <p>published on {{tweet.created|date:"c"}}</p>
+    <form action="{% url 'delete_tweet' tweet.pk %}" method="POST">
+        {% csrf_token %}
+        <input type='submit' value='delete' >
+    </form>    
+    {% endfor %}
+  {% else %}
+    <p>no tweets</p>
+  {% endif %}
+  </div>
+  
+</div> <!-- end left -->
+
+<div id="right">
+  <div class="your-followers">
+  <h3>Your followers</h3>
+  <ul>
+    {% if your_followers %}
+      {% for profile in your_followers %}
+        <li>{{profile.user.username}}</li>
+      {% endfor %}
+    {% else %}
+    <li>You have now followers...</li>
+    {% endif %}
+  </ul>
+  </div>
+  
+  <div class="users-to-follow">
+  <h3>People to follow</h3>
+  <ul>
+    {% for profile in profiles_to_follow %}
+    <li>
+    <form action="{% url 'follow' profile.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="{{profile.user.username}}" />
+    </form>
+    </li>
+    {% endfor %}
+  </ul>
+  </div>
+  
+  <div class="people-you-follow">
+  <h3>People you follow</h3>
+  <ul>
+    {% if people_you_follow %}
+      {% for profile in people_you_follow %}
+      <li><a href="{% url 'profile' profile.user.username %}">{{profile.user.username}}</a></li>
+      {% endfor %}
+    {% else %}
+      <li>You don't follow any one</li>
+    {% endif %}
+  </ul>
+  </div>
+</div> <!-- end right -->
+{% endblock %}

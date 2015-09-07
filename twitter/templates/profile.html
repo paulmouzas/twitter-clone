@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+  {% block content %}
+  <span><a href="{% url 'index' %}">home</a></span>
+  
+  <h1>{{user.username}}&apos;s profile</h1>
+  {% if request.user = user %}
+    <a href="{% url 'edit_profile' %}">edit profile</a>
+  {% endif %}
+  
+  <h3>About {{user.username}}</h3>
+  {% if user.profile %}
+    <p>{{user.profile.about}}</p>
+  {% else %}
+    <p>no profile to show</p>
+  {% endif %}
+{% endblock %}

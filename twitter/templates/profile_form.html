@@ -1,0 +1,6 @@
+<h1>Edit your profile</h1>
+<form action="{% url 'edit_profile' %}" method="POST">
+{% csrf_token %}
+{{profile_form.as_p}}
+<input type="submit" value="Submit"/>
+</form>
